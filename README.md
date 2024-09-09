@@ -1,4 +1,27 @@
 # Stack
+### Stack implementation using array
+```java
+class stack {
+    int size = 10000;
+    int arr[] = new int[size];
+    int top = -1;
+    void push(int x) {
+        top++;
+        arr[top] = x;
+    }
+    int pop() {
+        int x = arr[top];
+        top--;
+        return x;
+    }
+    int top() {
+        return arr[top];
+    }
+    int size() {
+        return top + 1;
+    }
+}
+```
 ### 2696. Minimum String Length After Removing Substrings
 [Leetcode link](https://leetcode.com/problems/minimum-string-length-after-removing-substrings/submissions/1382233984?envType=problem-list-v2&envId=stack&status=TO_DO&difficulty=EASY)
 <br>
