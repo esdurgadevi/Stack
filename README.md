@@ -136,3 +136,128 @@ class Solution {
     }
 }
 ```
+### 20. Valid Parentheses
+[Leetcode link](https://leetcode.com/problems/valid-parentheses/)
+<br>
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if:Open brackets must be closed by the same type of brackets. Open brackets must be closed in the correct order. Every close bracket has a corresponding open bracket of the same type.
+ 
+Example 1:
+Input: s = "()"
+Output: true
+
+Example 2:
+Input: s = "()[]{}"
+Output: true
+
+Example 3:
+Input: s = "(]"
+Output: false
+
+Example 4:
+Input: s = "([])"
+Output: true
+
+Constraints:
+1 <= s.length <= 104
+s consists of parentheses only '()[]{}'.
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> ans = new Stack<>();
+        ans.push(s.charAt(0));
+        for(int i=1;i<s.length();i++)
+        {
+            if(s.charAt(i)==')' && !ans.isEmpty()) 
+            {
+                if(ans.peek()=='(') ans.pop();
+                else ans.push(s.charAt(i));
+            }
+            else if(s.charAt(i)==']' && !ans.isEmpty())
+            {
+                if(ans.peek()=='[') ans.pop();
+                else ans.push(s.charAt(i));
+            }
+            else if(s.charAt(i)=='}' && !ans.isEmpty())
+            {
+                if(ans.peek()=='{') ans.pop();
+                else ans.push(s.charAt(i));
+            }
+            else ans.push(s.charAt(i));
+        }
+        return ans.isEmpty();
+    }
+}
+```
+- In this cde we check the valid parantheses each parenthesis have the corrosponding parentheses if it is valid.
+- The idea is first we push the first element to the stack.
+- Then traverse through the full string. If the character is a open parenthesis then we simply insert the stack.
+- Other wise that is close parenthesis we check the peek element of the stack if it both are same pair of group we pop the the stack element otherwise we add the current character to the stack.
+- finally if the stack is empty then all parenthesis are paired so return true otherwise we return false.
+### 155. Min Stack
+[Leetcode link](https://leetcode.com/problems/min-stack/description/)
+<br>
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.mplement the MinStack class:
+MinStack() initializes the stack object.
+void push(int val) pushes the element val onto the stack.
+void pop() removes the element on the top of the stack.
+int top() gets the top element of the stack.
+int getMin() retrieves the minimum element in the stack.
+You must implement a solution with O(1) time complexity for each function.
+
+Example 1:
+Input
+["MinStack","push","push","push","getMin","pop","top","getMin"]
+[[],[-2],[0],[-3],[],[],[],[]]
+Output
+[null,null,null,null,-3,null,0,-2]
+Explanation
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin(); // return -3
+minStack.pop();
+minStack.top();    // return 0
+minStack.getMin(); // return -2
+
+Constraints:
+-231 <= val <= 231 - 1
+Methods pop, top and getMin operations will always be called on non-empty stacks.
+At most 3 * 104 calls will be made to push, pop, top, and getMin.
+
+```java
+class MinStack {
+    int top;
+    int[] arr;
+    public MinStack() {
+        arr = new int[10000];
+        top = -1;
+    }
+    public void push(int val) {
+        arr[++top] = val;
+    }
+    public void pop() {
+        top--;
+    }
+    public int top() {
+        return arr[top];
+    }
+    public int getMin() {
+        int min = Integer.MAX_VALUE;
+        for(int i=0;i<=top;i++)
+        {
+            min = Math.min(min,arr[i]);
+        }
+        return min;
+    }
+}
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+```
