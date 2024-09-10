@@ -261,3 +261,75 @@ class MinStack {
  * int param_4 = obj.getMin();
  */
 ```
+### Infix to Postfix
+[Geeks for Geeks](https://www.geeksforgeeks.org/problems/infix-to-postfix-1587115620/1?utm_source=youtube&utm_medium=collab_striver_ytdescription&utm_campaign=infix-to-postfix)
+<br>
+Example 1:
+Input: str = "a+b*(c^d-e)^(f+g*h)-i"
+Output: abcd^e-fgh*+^*+i-
+Explanation:
+After converting the infix expression 
+into postfix expression, the resultant 
+expression will be abcd^e-fgh*+^*+i-
+
+Example 2:
+Input: str = "A*(B+C)/D"
+Output: ABC+*D/
+Explanation:
+After converting the infix expression 
+into postfix expression, the resultant 
+expression will be ABC+*D/
+
+```java
+class Solution {
+    // Function to convert an infix expression to a postfix expression.
+    public static int pre(char ch)
+    {
+        if(ch=='^') return 3;
+        else if(ch=='*' || ch=='/') return 2;
+        else if(ch=='+' || ch=='-') return 1;
+        else return -1;
+    }
+    public static String infixToPostfix(String exp) {
+        Stack<Character> ans = new Stack<>();
+        StringBuilder str = new StringBuilder();
+        for(int i=0;i<exp.length();i++)
+        {
+            char ch = exp.charAt(i);
+            if(Character.isLetterOrDigit(ch))
+            {
+                str.append(ch);
+            }
+            else if(ch=='(') ans.push(ch);
+            else if(ch==')')
+            {
+                while(!ans.isEmpty() && ans.peek()!='(')
+                {
+                    str.append(ans.pop());
+                }
+                ans.pop();
+            }
+            else 
+            {
+                while(!ans.isEmpty() && pre(ch)<pre(ans.peek()))
+                {
+                    str.append(ans.pop());
+                }
+                ans.push(ch);
+            }
+        }
+        while(!ans.isEmpty()) 
+        {
+            str.append(ans.pop());
+        }
+        return str.toString();
+    }
+}
+```
+- Convert the infix to postfix expression is very easy.
+- First we create a stack and the string which holds the postfix expression.
+- Whenever we see the alphabet or digit then we append the character to string.
+- If we see the open parenthesis we'(' we push to the stack.
+- If we see the close parenthesis then we append the operator between the open and close parenthesis to the string.
+- If we see other operator if the priority is greater than the priority of the stack operator then we push it into stack or else we take the operator from the stack and add it to the string. untill the priority will greater than the stack element priority.
+- Finally we add all the stack operator to the string.
