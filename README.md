@@ -333,3 +333,144 @@ class Solution {
 - If we see the close parenthesis then we append the operator between the open and close parenthesis to the string.
 - If we see other operator if the priority is greater than the priority of the stack operator then we push it into stack or else we take the operator from the stack and add it to the string. untill the priority will greater than the stack element priority.
 - Finally we add all the stack operator to the string.
+### 682. Baseball Game
+[Leetcode link](https://leetcode.com/problems/baseball-game/?envType=problem-list-v2&envId=stack&status=TO_DO&difficulty=EASY)
+<br>
+You are keeping the scores for a baseball game with strange rules. At the beginning of the game, you start with an empty record.
+You are given a list of strings operations, where operations[i] is the ith operation you must apply to the record and is one of the following:
+An integer x.
+Record a new score of x.
+'+'.
+Record a new score that is the sum of the previous two scores.
+'D'.
+Record a new score that is the double of the previous score.
+'C'.
+Invalidate the previous score, removing it from the record.
+Return the sum of all the scores on the record after applying all the operations.
+The test cases are generated such that the answer and all intermediate calculations fit in a 32-bit integer and that all operations are valid.
+
+Example 1:
+Input: ops = ["5","2","C","D","+"]
+Output: 30
+Explanation:
+"5" - Add 5 to the record, record is now [5].
+"2" - Add 2 to the record, record is now [5, 2].
+"C" - Invalidate and remove the previous score, record is now [5].
+"D" - Add 2 * 5 = 10 to the record, record is now [5, 10].
+"+" - Add 5 + 10 = 15 to the record, record is now [5, 10, 15].
+The total sum is 5 + 10 + 15 = 30.
+
+Example 2:
+Input: ops = ["5","-2","4","C","D","9","+","+"]
+Output: 27
+Explanation:
+"5" - Add 5 to the record, record is now [5].
+"-2" - Add -2 to the record, record is now [5, -2].
+"4" - Add 4 to the record, record is now [5, -2, 4].
+"C" - Invalidate and remove the previous score, record is now [5, -2].
+"D" - Add 2 * -2 = -4 to the record, record is now [5, -2, -4].
+"9" - Add 9 to the record, record is now [5, -2, -4, 9].
+"+" - Add -4 + 9 = 5 to the record, record is now [5, -2, -4, 9, 5].
+"+" - Add 9 + 5 = 14 to the record, record is now [5, -2, -4, 9, 5, 14].
+The total sum is 5 + -2 + -4 + 9 + 5 + 14 = 27.
+
+Example 3:
+Input: ops = ["1","C"]
+Output: 0
+Explanation:
+"1" - Add 1 to the record, record is now [1].
+"C" - Invalidate and remove the previous score, record is now [].
+Since the record is empty, the total sum is 0.
+ 
+Consraints:
+1 <= operations.length <= 1000
+operations[i] is "C", "D", "+", or a string representing an integer in the range [-3 * 104, 3 * 104].
+For operation "+", there will always be at least two previous scores on the record.
+For operations "C" and "D", there will always be at least one previous score on the record.
+
+```java
+class Solution {
+    public int calPoints(String[] operations) {
+        Stack<Integer> stk = new Stack<>();
+        int sum = 0;
+        for(String s:operations)
+        {
+            if(s.equals("C")) stk.pop();
+            else if(s.equals("D")) stk.push(stk.peek()*2);
+            else if(s.equals("+"))
+            {
+                int t1 = stk.peek();
+                stk.pop();
+                int t2 = stk.peek();
+                stk.push(t1);
+                stk.push(t1+t2);
+            }
+            else stk.push(Integer.parseInt(s));
+        }
+        for(int x:stk) sum+=x;
+        return sum;
+    }
+}
+```
+### 844. Backspace String Compare
+[leetcode link](https://leetcode.com/problems/backspace-string-compare/description/?envType=problem-list-v2&envId=stack&status=TO_DO&difficulty=EASY)
+<br>
+Given two strings s and t, return true if they are equal when both are typed into empty text editors. '#' means a backspace character.
+Note that after backspacing an empty text, the text will continue empty.
+
+Example 1:
+Input: s = "ab#c", t = "ad#c"
+Output: true
+Explanation: Both s and t become "ac".
+
+Example 2:
+Input: s = "ab##", t = "c#d#"
+Output: true
+Explanation: Both s and t become "".
+
+Example 3:
+Input: s = "a#c", t = "b"
+Output: false
+Explanation: s becomes "c" while t becomes "b".
+
+Constraints:
+1 <= s.length, t.length <= 200
+s and t only contain lowercase letters and '#' characters.
+
+```java
+class Solution {
+    public boolean backspaceCompare(String s, String t) {
+        Stack<Character> a1 = new Stack<>();
+        Stack<Character> a2 = new Stack<>();
+        for(int i=0;i<s.length();i++)
+        {
+            if(s.charAt(i)=='#') 
+            {
+                if(!a1.isEmpty()) a1.pop();
+            }
+            else if(s.charAt(i)!='#') a1.push(s.charAt(i));
+        }
+        for(int i=0;i<t.length();i++)
+        {
+            if(t.charAt(i)=='#') 
+            {
+                if(!a2.isEmpty()) a2.pop();
+            }
+            else if(t.charAt(i)!='#') a2.push(t.charAt(i));
+        }
+        System.out.print(a1.size()+" "+a2.size());
+        if(a1.size()!=a2.size()) 
+        {
+            return false;
+        }
+        while(!a1.isEmpty() && !a2.isEmpty())
+        {
+            if(a1.peek()!=a2.peek()) return false;
+            a1.pop();
+            a2.pop();
+        }
+        return true;
+    }
+}
+```
+- In this code we push the character if it is alpabet. Otherwise we pop the previous stack element finally we check the equallyty of the two stack.
