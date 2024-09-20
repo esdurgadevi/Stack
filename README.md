@@ -474,3 +474,79 @@ class Solution {
 }
 ```
 - In this code we push the character if it is alpabet. Otherwise we pop the previous stack element finally we check the equallyty of the two stack.
+### 1700. Number of Students Unable to Eat Lunch
+[Leetcode link](https://leetcode.com/problems/number-of-students-unable-to-eat-lunch/?envType=problem-list-v2&envId=stack&status=TO_DO&difficulty=EASY)
+<br>
+The school cafeteria offers circular and square sandwiches at lunch break, referred to by numbers 0 and 1 respectively. All students stand in a queue. Each student either prefers square or circular sandwiches. The number of sandwiches in the cafeteria is equal to the number of students. The sandwiches are placed in a stack. At each step:
+If the student at the front of the queue prefers the sandwich on the top of the stack, they will take it and leave the queue.
+Otherwise, they will leave it and go to the queue's end.
+This continues until none of the queue students want to take the top sandwich and are thus unable to eat.
+You are given two integer arrays students and sandwiches where sandwiches[i] is the type of the i​​​​​​th sandwich in the stack (i = 0 is the top of the stack) and students[j] is the preference of the j​​​​​​th student in the initial queue (j = 0 is the front of the queue). Return the number of students that are unable to eat.
+
+Example 1:
+Input: students = [1,1,0,0], sandwiches = [0,1,0,1]
+Output: 0 
+Explanation:
+- Front student leaves the top sandwich and returns to the end of the line making students = [1,0,0,1].
+- Front student leaves the top sandwich and returns to the end of the line making students = [0,0,1,1].
+- Front student takes the top sandwich and leaves the line making students = [0,1,1] and sandwiches = [1,0,1].
+- Front student leaves the top sandwich and returns to the end of the line making students = [1,1,0].
+- Front student takes the top sandwich and leaves the line making students = [1,0] and sandwiches = [0,1].
+- Front student leaves the top sandwich and returns to the end of the line making students = [0,1].
+- Front student takes the top sandwich and leaves the line making students = [1] and sandwiches = [1].
+- Front student takes the top sandwich and leaves the line making students = [] and sandwiches = [].
+Hence all students are able to eat.
+
+Example 2:
+Input: students = [1,1,1,0,0,1], sandwiches = [1,0,0,0,1,1]
+Output: 3
+
+```java
+class Solution {
+    public int count(Deque<Integer> a,int e)
+    {
+        int c = 0;
+        for(int x:a)
+        {
+            if(x==e) c++;
+        }
+        return c;
+    }
+    public int countStudents(int[] students, int[] sandwiches) {
+        Stack<Integer> ans = new Stack<>();
+        Deque<Integer> a1 = new ArrayDeque<>();
+        for(int i=sandwiches.length-1;i>=0;i--)
+        {
+            ans.push(sandwiches[i]);
+            a1.addFirst(students[i]);
+        }
+        while(!ans.isEmpty())
+        {
+            if(ans.peek()==a1.getFirst()) 
+            {
+                ans.pop();
+                a1.removeFirst();
+            }
+            else
+            {
+                int not = 1-ans.peek();
+                if(count(a1,not)==a1.size()) break;
+                int t = a1.getFirst();
+                a1.removeFirst();
+                a1.addLast(t);
+            }
+        }
+        return a1.size();
+    }
+}
+```
+- In this code given the students queue as well as the sandwiches list we find how many students did not get the sandwich.
+- If the sandwich did not like by student then the student go to the final of the queue.
+- So what we do is first we convert the student array to queue, and the sandwich array to stack.
+- then we check if ans.peek() that is the first sandwich is equal to the first student in the queue if it is equal we distribute that particular sandwich to the student.
+- So we pop the stack element as well as we removethe first element from the queue.
+- If both are not equal then we check the stop condition because we did not check the stop condition the loop runs infinetly that is the student repeatly go to the last.
+- So we check the stop condition.
+- That is first we find the top element of stack if the top element is '0' then we count the 1 in the queue if the count of ones is equal to the size of the queue then no student will get the sandwich. so we break.
+- Otherwise we get the first element from the queue and remove it and added to the final position of the queue.
+- Finally we return the size of the queue.(inderiarly mean that the students who did not get the sandwich).   
