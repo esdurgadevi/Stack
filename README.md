@@ -550,3 +550,87 @@ class Solution {
 - That is first we find the top element of stack if the top element is '0' then we count the 1 in the queue if the count of ones is equal to the size of the queue then no student will get the sandwich. so we break.
 - Otherwise we get the first element from the queue and remove it and added to the final position of the queue.
 - Finally we return the size of the queue.(inderiarly mean that the students who did not get the sandwich).   
+### 1106. Parsing A Boolean Expression
+[LeetcodeLink](https://leetcode.com/problems/parsing-a-boolean-expression/description/)
+<br>
+A boolean expression is an expression that evaluates to either true or false. It can be in one of the following shapes: 't' that evaluates to true.
+'f' that evaluates to false. '!(subExpr)' that evaluates to the logical NOT of the inner expression subExpr. '&(subExpr1, subExpr2, ..., subExprn)' that evaluates to the logical AND of the inner expressions subExpr1, subExpr2, ..., subExprn where n >= 1. '|(subExpr1, subExpr2, ..., subExprn)' that evaluates to the logical OR of the inner expressions subExpr1, subExpr2, ..., subExprn where n >= 1. Given a string expression that represents a boolean expression, return the evaluation of that expression. It is guaranteed that the given expression is valid and follows the given rules.
+
+Example 1:
+Input: expression = "&(|(f))"
+Output: false
+Explanation: 
+First, evaluate |(f) --> f. The expression is now "&(f)".
+Then, evaluate &(f) --> f. The expression is now "f".
+Finally, return false.
+
+Example 2:
+Input: expression = "|(f,f,f,t)"
+Output: true
+Explanation: The evaluation of (false OR false OR false OR true) is true.
+
+Example 3:
+Input: expression = "!(&(f,t))"
+Output: true
+Explanation: 
+First, evaluate &(f,t) --> (false AND true) --> false --> f. The expression is now "!(f)".
+Then, evaluate !(f) --> NOT false --> true. We return true.
+
+Constraints:
+1 <= expression.length <= 2 * 104
+expression[i] is one following characters: '(', ')', '&', '|', '!', 't', 'f', and ','.
+```java
+class Solution {
+    public boolean parseBoolExpr(String expression) {
+        expression = expression.replace(",", "");
+        Stack<Character> st1 = new Stack<>();
+        Stack<Character> st2 = new Stack<>();
+        for(int i=0;i<expression.length();i++)
+        {
+            if(expression.charAt(i)=='|' || expression.charAt(i)=='&' || expression.charAt(i)=='!')
+            {
+                st1.push(expression.charAt(i));
+            }
+            else
+            {
+                if(expression.charAt(i)==')') 
+                {
+                    char ch = st1.pop();
+                    while(st2.peek()!='(')
+                    {
+                        char a = st2.pop();
+                        char b = st2.peek();
+                        if(b=='(')
+                        {
+                            st2.pop();
+                            if(ch!='!') st2.push(a);
+                            else st2.push(a=='f'?'t':'f');
+                            break;
+                        }
+                        else
+                        {
+                            st2.pop();
+                            Boolean c = (a=='f')?false:true;
+                            Boolean d = (b=='f')?false:true;
+                            Boolean res = true;
+                            if(ch=='|')  res = c|d;
+                            else if(ch=='&') res = c&d;
+                            else res = !c;
+                            st2.push(res==false?'f':'t');
+
+                        }
+                    }
+                }
+                else st2.push(expression.charAt(i));
+            }
+        }
+        return st2.pop()=='f'?false:true;
+    }
+}
+```
+- We are given a f and t and some logical operator string we need to perform the logical operations and then return the final answer that is true or false.
+- so i create two stack one containe the operator and the another one containe the operands.
+- so we reduce the confusion of the comma firstly we remove the comma.
+- If we see the logical operator | & and ! then we push to the stack 1 otherwisw if we see the f or t that time also push the operator to the stack 2.
+- If we see the close bracket then we need to pop the element untill we reach the close bracket and corrospondigly we apply the logical operators.
+- Finally return the final answer.
